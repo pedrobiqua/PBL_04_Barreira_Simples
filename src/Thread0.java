@@ -1,4 +1,8 @@
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
+import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 public class Thread0 extends Thread {
     /* TO DO:
@@ -23,15 +27,29 @@ public class Thread0 extends Thread {
     da lista.
     */
 
-    ArrayList<Funcionarios> lParte1 = new ArrayList<Funcionarios>();
-    ArrayList<Funcionarios> lParte2 = new ArrayList<Funcionarios>();
-    ArrayList<Funcionarios> lParte3 = new ArrayList<Funcionarios>();
-    ArrayList<Funcionarios> lParte4 = new ArrayList<Funcionarios>();
+    // Salvando os indeces
+    static ArrayList<Integer> lParte1 = new ArrayList<Integer>();
+    static ArrayList<Integer> lParte2 = new ArrayList<Integer>();
+    static ArrayList<Integer> lParte3 = new ArrayList<Integer>();
+    static ArrayList<Integer> lParte4 = new ArrayList<Integer>();
+    static int contadorThreads = 0;
+    static int nThreads = 4;
+
+    Semaphore mutex, mutex1, mutex2, mutex3, mutex4, barreira;
+
+    public Thread0(Semaphore mutex, Semaphore mutex1, Semaphore mutex2, Semaphore mutex3, Semaphore mutex4, Semaphore barreira) {
+        this.mutex = mutex;
+        this.mutex1 = mutex1;
+        this.mutex2 = mutex2;
+        this.mutex3 = mutex3;
+        this.mutex4 = mutex4;
+        this.barreira = barreira;
+    }
 
     @Override
     public void run() {
         // Cria todos os funcionários
-        int n = 100;
+        int n = 100; // Esse n pode ser passado como parametro
         for (int i = 0; i < n; i++) {
             // Adicionando código a todos os funcionários
             Funcionarios.lFuncionarios.add(new Funcionarios(i + 1));
@@ -40,7 +58,15 @@ public class Thread0 extends Thread {
         // Separando a lista de funcionários em 4 partes
         divideLista4partes();
 
-        VisualizandoListaFuncionarios();
+        Thread1 thread1 = new Thread1(mutex, mutex1, mutex2, mutex3, mutex4, barreira);
+        Thread2 thread2 = new Thread2(mutex, mutex1, mutex2, mutex3, mutex4, barreira);
+        Thread3 thread3 = new Thread3(mutex, mutex1, mutex2, mutex3, mutex4, barreira);
+        Thread4 thread4 = new Thread4(mutex, mutex1, mutex2, mutex3, mutex4, barreira);
+
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
         
     }
 
@@ -51,17 +77,17 @@ public class Thread0 extends Thread {
         int partes = particoes;
 
         while( contador < 4){
-            System.out.println("Quantidade de partições: " + particoes);
             for ( ;i < partes; i++) {
-                System.out.println("Index: " + i);
+                
+                // Adiciona o indice das partes
                 if ( contador == 0) {
-                    lParte1.add(Funcionarios.lFuncionarios.get(i));
+                    lParte1.add(i);
                 } else if( contador == 1) {
-                    lParte2.add(Funcionarios.lFuncionarios.get(i));
+                    lParte2.add(i);
                 } else if( contador == 2) {
-                    lParte3.add(Funcionarios.lFuncionarios.get(i));
+                    lParte3.add(i);
                 } else if( contador == 3) {
-                    lParte4.add(Funcionarios.lFuncionarios.get(i));
+                    lParte4.add(i);
                 }
             }
 
@@ -71,10 +97,17 @@ public class Thread0 extends Thread {
         }
     }
 
-    // Apenas para debugar a lista
-    public void VisualizandoListaFuncionarios() {
-        for (int j = 0; j < lParte4.size(); j++) {
-            System.out.println(lParte4.get(j).salario_bruto);
+    public void ImprimeContraCheque() {
+        try {
+            Path path = FileSystems.getDefault().getPath("");
+		    String directoryName = path.toAbsolutePath().toString();
+            System.out.println(directoryName + "\\src\\aaaaa.txt");
+
+            File file = new File(directoryName + "\\src\\arquivos\\parte1.txt");
+            file.createNewFile();
+
+        } catch (Exception e) {
+            System.out.println("To no catch");
         }
     }
 }
