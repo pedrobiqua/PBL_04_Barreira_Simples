@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 public class Funcionarios {
@@ -6,7 +7,7 @@ public class Funcionarios {
     
     Random random = new Random();
     int codigo;
-    double salario_bruto = random.nextDouble() * 10000;
+    double salario_bruto = (new Random().nextDouble()) + (new Random().nextInt(4000)+1000);
     // Calculado pela Thread 1
     double desconto_imp_ren;
     // Calculado pela Thread 2
@@ -26,5 +27,11 @@ public class Funcionarios {
         this.codigo = codigo;
     }
 
+    //Fazer o metodo de print aqui no funcionário
+    public String relatorioDeDados() {
+        DecimalFormat df = new DecimalFormat("#,###.00");
+        codigo++;
+        return ("Funcionario: " + codigo + " possui salario bruto de R$" + df.format(salario_bruto) + ". Teve o desconto total de R$" + df.format(total_descontos) + " passando a ficar com o salario liquido de R$" + df.format(salario_liquido) + ".\n");
+    }
 
 }

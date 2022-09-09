@@ -52,7 +52,7 @@ public class Thread0 extends Thread {
         int n = 100; // Esse n pode ser passado como parametro
         for (int i = 0; i < n; i++) {
             // Adicionando código a todos os funcionários
-            Funcionarios.lFuncionarios.add(new Funcionarios(i + 1));
+            Funcionarios.lFuncionarios.add(new Funcionarios(i));
         }
 
         // Separando a lista de funcionários em 4 partes
@@ -77,7 +77,7 @@ public class Thread0 extends Thread {
         int partes = particoes;
 
         while( contador < 4){
-            for ( ;i < partes; i++) {
+            for ( ;i <= partes; i++) {
                 
                 // Adiciona o indice das partes
                 if ( contador == 0) {

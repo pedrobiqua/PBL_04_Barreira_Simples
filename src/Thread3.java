@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.concurrent.Semaphore;
@@ -17,6 +18,9 @@ public class Thread3 extends Thread {
     
     */
 
+    /**
+     * Semaforo usado para controlar o acesso a lista de funcionários
+     */
     Semaphore mutex, mutex1, mutex2, mutex3, mutex4, barreira;
 
     public Thread3(Semaphore mutex, Semaphore mutex1, Semaphore mutex2, Semaphore mutex3, Semaphore mutex4, Semaphore barreira) {
@@ -111,10 +115,20 @@ public class Thread3 extends Thread {
             System.out.println(directoryName + "\\src\\arquivos\\parte3.txt");
 
             File file = new File(directoryName + "\\src\\arquivos\\parte3.txt");
+            // Cria arquivo
             file.createNewFile();
 
+            // Escreve no arquivo criado
+            FileWriter myWriter = new FileWriter(directoryName + "\\src\\arquivos\\parte3.txt");
+            var ultimaPosicaoP3 = Thread0.lParte3.get(Thread0.lParte3.size() - 1);
+            for (int i = Thread0.lParte3.get(0); i < ultimaPosicaoP3; i++) {
+                myWriter.write(Funcionarios.lFuncionarios.get(i).relatorioDeDados());
+            }
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+
         } catch (Exception e) {
-            System.out.println("To no catch");
+            System.out.println("Erro ae escrever o arquivo");;
         }
     }
 

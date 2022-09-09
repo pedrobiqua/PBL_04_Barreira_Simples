@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.concurrent.Semaphore;
@@ -15,6 +16,10 @@ public class Thread2 extends Thread {
     C.  Imprime os contra-cheques dos funcionários da parte 2 da lista, gerando um 
     arquivo chamado parte2.txt  
     */
+
+    /**
+     * Semaforo usado para controlar o acesso a lista de funcionários
+     */
     Semaphore mutex, mutex1, mutex2, mutex3, mutex4, barreira;
 
     public Thread2(Semaphore mutex, Semaphore mutex1, Semaphore mutex2, Semaphore mutex3, Semaphore mutex4, Semaphore barreira) {
@@ -107,11 +112,21 @@ public class Thread2 extends Thread {
 		    String directoryName = path.toAbsolutePath().toString();
             System.out.println(directoryName + "\\src\\arquivos\\parte2.txt");
 
+            // Cria arquivo
             File file = new File(directoryName + "\\src\\arquivos\\parte2.txt");
             file.createNewFile();
 
+            // Escreve no arquivo criado
+            FileWriter myWriter = new FileWriter(directoryName + "\\src\\arquivos\\parte2.txt");
+            var ultimaPosicaoP2 = Thread0.lParte2.get(Thread0.lParte2.size() - 1);
+            for (int i = Thread0.lParte2.get(0); i < ultimaPosicaoP2; i++) {
+                myWriter.write(Funcionarios.lFuncionarios.get(i).relatorioDeDados());
+            }
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+
         } catch (Exception e) {
-            System.out.println("To no catch");
+            System.out.println("Erro ae escrever o arquivo");
         }
     }
 
